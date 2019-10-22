@@ -29,7 +29,6 @@ Booking belong to a User
 Trip has many user
 
 ## User Stories
-
 As a user, I want to make a booking (Create)
 As a user, I want to delete one of my booking (Delete)
 As a User, I should be able to edit my personal information (Update)
