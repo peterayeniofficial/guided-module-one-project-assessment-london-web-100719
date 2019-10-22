@@ -23,7 +23,9 @@ Booking
 User has many trips through booking
 Trip has many user through booking
 
-User belong to a Trip
+Booking belong to a Trip
+Booking belong to a User
+
 Trip has many user
 
 ## User Stories

@@ -1,4 +1,4 @@
 class Booking < ActiveRecord::Base
-  has_many :trips
-  has_many :users, through: trips
+  belongs_to :trip
+  belongs_to :user
 end
