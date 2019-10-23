@@ -135,7 +135,13 @@ class CommandLineInterface
 
   def render(array)
     array.each do |trip|
-      puts "Going to #{trip.destination} from #{trip.origin} "
+      active = ''
+      if trip.active == f
+        active = 'Cancel'
+      else
+        active = 'On Shedule'
+      end
+      puts "Going to #{trip.destination} from #{trip.origin}, Fare: #{trip.fare} ::: Date: #{trip.trip_date} ::: Status #{active}"
     end
   end
 
