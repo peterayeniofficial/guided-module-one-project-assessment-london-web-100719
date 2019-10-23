@@ -21,7 +21,7 @@ class CommandLineInterface
     puts 'Thinking of geting away? We can help you with that decision!'
     puts 'Enter the destination you want to go:'
     query = gets.chomp
-    results = Trip.where('destination = ? ', query)
+    results = find_trip_by_destination(query)
     render(results)
   end
 
@@ -36,8 +36,7 @@ class CommandLineInterface
     email = gets.chomp
 
     create_user = User.find_or_create_by(first_name: f_name, last_name: l_name, email: email)
-    puts "\n"
-    puts "\n"
+    new_lines
     puts "Welcome #{create_user.first_name} #{create_user.last_name}"
 
     new_lines
@@ -75,7 +74,7 @@ class CommandLineInterface
   end
   
   def first_ten_trips
-    results = Trip.take(5)
+    results = Trip.first_ten
     render(results)
     new_lines
 
@@ -100,36 +99,35 @@ class CommandLineInterface
   
   end
 
+  
+
   def menu 
     puts "[1] To Create an Account Press 1"
     puts "[2] To Check Trip by Destination Press 2"
     puts "[3] To Check Available Trips Press 3"
     puts "[4] To Update your account 4"
     puts "[5] To Delete your Account Press 5"
+    # Check my own trips
+    # Delete my own trips
     puts "[6] To Quit press any Key"
 
     ch = STDIN.getch
   
       case ch
       when "1"
-        puts "\n"
-        puts "\n"
+        new_lines
         create_account
       when "2"
-        puts "\n"
-        puts "\n"
+        new_lines
         trip_by_destination
       when "3"
-        puts "\n"
-        puts "\n"
+        new_lines
         first_ten_trips
       when "4"
-        puts "\n"
-        puts "\n"
+        new_lines
         update_account
       when "5"
-        puts "\n"
-        puts "\n"
+        new_lines
         delete_account
       when "6"
         'Good bye'
