@@ -40,13 +40,54 @@ class CommandLineInterface
     puts "\n"
     puts "\n"
     puts "Welcome #{create_user.first_name} #{create_user.last_name}"
+
+    new_lines
+
+    menu
   end
+
+  def update_account
+    puts 'Your Email'
+    email = gets.chomp
+    user = User.find_by(email: email)
+    update = false
+    success = "Update Succesful"
+    failure = "Something went wrong, relax we are working on it"
+    if user 
+      puts "\n"
+      puts "Thank you! your current information are #{user.first_name}, #{user.last_name}"
+      puts "\n"
+      puts "New Email: "
+      email = gets.chomp
+      puts "\n"
+      puts "New First Name: "
+      f_name = gets.chomp
+      puts "\n"
+      puts "New Last Name: "
+      l_name = gets.chomp
+      update = user.update(first_name: f_name, last_name: l_name, email: email)
+      # puts "Thank you! your new information are #{user.first_name}, #{user.last_name}"
+    else
+      puts "You don't have an account with us please press 1 to create one"
+    end
+    new_lines
+    puts "Thank you! your new information are Name: #{user.first_name} #{user.last_name} | Email: #{user.email} " if update == true
+    new_lines
+
+    menu
+
+
+  end
+  
 
   
 
   def first_ten_trips
-    results = Trip.take(10)
+    results = Trip.take(5)
     render(results)
+    new_lines
+
+    menu
   end
 
   
@@ -74,6 +115,10 @@ class CommandLineInterface
         puts "\n"
         puts "\n"
         first_ten_trips
+      when "4"
+        puts "\n"
+        puts "\n"
+        update_account
       when "6"
         'Good bye'
       else
@@ -92,5 +137,9 @@ class CommandLineInterface
     array.each do |trip|
       puts "Going to #{trip.destination} from #{trip.origin} "
     end
+  end
+
+  def new_lines
+    puts "\n\n"
   end
 end
