@@ -28,19 +28,21 @@ class CommandLineInterface
 
   def create_account
     puts 'First Name: '
-    first_name = gets.chomp
+    f_name = gets.chomp
 
     puts 'Last Name: '
-    last_name = gets.chomp
+    l_name = gets.chomp
 
     puts 'Email: '
     email = gets.chomp
 
-    create_user = User.find_or_create_by(first_name: first_name, last_name: last_name, email: email)
+    create_user = User.find_or_create_by(first_name: f_name, last_name: l_name, email: email)
     puts "\n"
     puts "\n"
     puts "Welcome #{create_user.first_name} #{create_user.last_name}"
   end
+
+  
 
   def first_ten_trips
     results = Trip.take(10)
