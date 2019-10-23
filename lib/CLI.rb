@@ -2,7 +2,6 @@ class CommandLineInterface
   def greet
     10.times {puts "\n"}
     puts 'Welcome to Wayfarer!'
-      hello =
     puts "                                       ,d8888b                          
                                       88P'                             
                                    d888888P                            
@@ -51,8 +50,6 @@ class CommandLineInterface
     email = gets.chomp
     user = User.find_by(email: email)
     update = false
-    success = "Update Succesful"
-    failure = "Something went wrong, relax we are working on it"
     if user 
       puts "\n"
       puts "Thank you! your current information are #{user.first_name}, #{user.last_name}"
@@ -75,13 +72,8 @@ class CommandLineInterface
     new_lines
 
     menu
-
-
   end
   
-
-  
-
   def first_ten_trips
     results = Trip.take(5)
     render(results)
@@ -90,7 +82,23 @@ class CommandLineInterface
     menu
   end
 
+  def delete_account
+    puts 'You Really Want to Stop Seeing Great Places'
+    puts 'Please enter your Email: '
+    email = gets.chomp
   
+    user = User.find_by(email: email)
+    if user
+      delete = user.delete
+      new_lines
+      puts "Sad to see you go #{delete.first_name} #{delete.last_name}. Account Deleted Successful"
+      new_lines
+      menu
+    else
+      puts "You don't have an account with us please press 1 to create one"
+    end
+  
+  end
 
   def menu 
     puts "[1] To Create an Account Press 1"
@@ -98,7 +106,7 @@ class CommandLineInterface
     puts "[3] To Check Available Trips Press 3"
     puts "[4] To Update your account 4"
     puts "[5] To Delete your Account Press 5"
-    puts "[6] To Quit press 6"
+    puts "[6] To Quit press any Key"
 
     ch = STDIN.getch
   
@@ -119,6 +127,10 @@ class CommandLineInterface
         puts "\n"
         puts "\n"
         update_account
+      when "5"
+        puts "\n"
+        puts "\n"
+        delete_account
       when "6"
         'Good bye'
       else
@@ -136,12 +148,12 @@ class CommandLineInterface
   def render(array)
     array.each do |trip|
       active = ''
-      if trip.active == f
-        active = 'Cancel'
+      if trip.active == false
+        active = 'Canceled'
       else
         active = 'On Shedule'
       end
-      puts "Going to #{trip.destination} from #{trip.origin}, Fare: #{trip.fare} ::: Date: #{trip.trip_date} ::: Status #{active}"
+      puts "\nGoing to #{trip.destination} from #{trip.origin}, Fare: #{trip.fare} :: Date: #{trip.trip_date} :: Status=> #{active}\n"
     end
   end
 
