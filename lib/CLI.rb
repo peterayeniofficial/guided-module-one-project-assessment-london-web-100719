@@ -1,165 +1,10 @@
+require_relative '../lib/controller.rb'
+require_relative '../lib/view.rb'
+
 class CommandLineInterface
-  def greet
-    10.times {puts "\n"}
-    puts 'Welcome to Wayfarer!'
-    puts "                                       ,d8888b                          
-                                      88P'                             
-                                   d888888P                            
- ?88   d8P  d8P d888b8b  ?88   d8P   ?88'     d888b8b    88bd88b d8888b
- d88  d8P' d8P'd8P' ?88  d88   88    88P     d8P' ?88    88P'  `d8b_,dP
- ?8b ,88b ,88' 88b  ,88b ?8(  d88   d88      88b  ,88b  d88     88b    
- `?888P'888P'  `?88P'`88b`?88P'?8b d88'      `?88P'`88bd88'     `?888P'
-                                )88                                    
-                               ,d8P                                    
-                            `?888P'                                    
- "
-    
-  
-  end
 
-  def trip_by_destination
-    puts 'Thinking of geting away? We can help you with that decision!'
-    puts 'Enter the destination you want to go:'
-    query = gets.chomp
-    results = find_trip_by_destination(query)
-    render(results)
-  end
-
-  def create_account
-    puts 'First Name: '
-    f_name = gets.chomp
-
-    puts 'Last Name: '
-    l_name = gets.chomp
-
-    puts 'Email: '
-    email = gets.chomp
-
-    create_user = User.find_or_create_by(first_name: f_name, last_name: l_name, email: email)
-    new_lines
-    puts "Welcome #{create_user.first_name} #{create_user.last_name}"
-
-    new_lines
-
-    menu
-  end
-
-  def update_account
-    puts 'Your Email'
-    email = gets.chomp
-    user = User.find_by(email: email)
-    update = false
-    if user 
-      puts "\n"
-      puts "Thank you! your current information are #{user.first_name}, #{user.last_name}"
-      puts "\n"
-      puts "New Email: "
-      email = gets.chomp
-      puts "\n"
-      puts "New First Name: "
-      f_name = gets.chomp
-      puts "\n"
-      puts "New Last Name: "
-      l_name = gets.chomp
-      update = user.update(first_name: f_name, last_name: l_name, email: email)
-      # puts "Thank you! your new information are #{user.first_name}, #{user.last_name}"
-    else
-      puts "You don't have an account with us please press 1 to create one"
-    end
-    new_lines
-    puts "Thank you! your new information are Name: #{user.first_name} #{user.last_name} | Email: #{user.email} " if update == true
-    new_lines
-
-    menu
-  end
-  
-  def first_ten_trips
-    results = Trip.first_ten
-    render(results)
-    new_lines
-
-    menu
-  end
-
-  def delete_account
-    puts 'You Really Want to Stop Seeing Great Places'
-    puts 'Please enter your Email: '
-    email = gets.chomp
-  
-    user = User.find_by(email: email)
-    if user
-      delete = user.delete
-      new_lines
-      puts "Sad to see you go #{delete.first_name} #{delete.last_name}. Account Deleted Successful"
-      new_lines
-      menu
-    else
-      puts "You don't have an account with us please press 1 to create one"
-    end
-  
-  end
-
-  
-
-  def my_trips
-    puts "Please Enter your email to get all your Booked Trips: "
-    email = gets.chomp
-    my_trips = User.my_trips(email)
-    puts "||||||||| Kindly FInd your bookings bellow |||||||||"
-    render(my_trips)
-    new_lines
-    menu
-  end
-
-  def delete_a_booking
-    puts "Please Enter the ID of the booking to delete"
-
-  end
-
-
-
-  def menu 
-    puts "[1] To Create an Account Press 1"
-    puts "[2] To Check your Booked Trips 2"
-    puts "[3] To Cancel a Booking Press 3"
-    puts "[4] To Check Trip by Destination Press 4"
-    puts "[5] To Check Available Trips Press 5"
-    puts "[6] To Update your account 6"
-    puts "[7] To Delete your Account Press 7"
-    # Check my own trips
-    # Delete my own trips
-    puts "[8] To Quit press any Key"
-
-    ch = STDIN.getch
-  
-      case ch
-      when "1"
-        new_lines
-        create_account
-      when "2"
-        new_lines
-        my_trips
-      when "3"
-        new_lines
-        delete_a_booking
-      when "4"
-        new_lines
-        trip_by_destination
-      when "5"
-        new_lines
-        first_ten_trips
-      when "6"
-        new_lines
-        update_account
-      when "7"
-        new_lines
-        delete_account
-      when "8"
-        'Good bye'
-      else
-        'Please enter a valid response from the Menu. eg: [1] to create an account'
-      end
-  end
+  include Controller
+  include View
 
   def run
     greet
@@ -168,15 +13,22 @@ class CommandLineInterface
 
   private
 
-  def render(array)
-    array.each do |trip|
+  def render(trips)
+    trips.each do |trip|
       active = ''
       if trip.active == false
         active = 'Canceled'
       else
         active = 'Active'
       end
-      puts "\nID:: #{trip.id} Going to #{trip.destination} from #{trip.origin}, Fare: #{trip.fare} :: Date: #{trip.trip_date} :: Status=> #{active}\n"
+      puts "\nID:: #{trip.id} Going to #{trip.destination} from #{trip.origin},
+            Fare: #{trip.fare} :: Date: #{trip.trip_date} :: Status=> #{active}\n"
+    end
+  end
+
+  def render_bookings(bookings)
+    bookings.each do |booking|
+      puts "\nID:: #{booking.id} Booked ON:: #{booking.created_at}"
     end
   end
 
