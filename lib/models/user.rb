@@ -22,19 +22,40 @@ class User < ActiveRecord::Base
     self.take(10)
   end
 
-  def find_user_by_email(email)
-    self.find_by(email: email)
+  def self.find_user_by_email(email)
+    user = self.find_by(email: email)
+    if user == nil 
+      nil
+    else
+      user
+    end
+
   end
+  
+  def self.my_bookings(email)
+    user = self.find_by(email: email)
+    if user == nil 
+      nil
+    else
+      user.bookings
+    end
+
+  end
+
+  
 
   # As a User, I want to see all my trips (Read)
   def self.my_trips(email)
     user = find_by(email: email)
-    user.trips
+    if user == nil 
+      nil
+    else
+      user.trips
+    end
   end
 
   def self.delete_trip(id)
     id = id.to_i
-    
     
   end
 

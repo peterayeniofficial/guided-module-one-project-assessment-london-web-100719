@@ -21,8 +21,8 @@ class CommandLineInterface
       else
         active = 'Active'
       end
-      puts "\nID:: #{trip.id} Going to #{trip.destination} from #{trip.origin},
-            Fare: #{trip.fare} :: Date: #{trip.trip_date} :: Status=> #{active}\n"
+      puts "\nID: #{trip.id} => Going to #{trip.destination} from #{trip.origin},
+            Fare: £#{trip.fare} :: Date: #{trip.trip_date} :: Status=> #{active}\n"
     end
   end
 

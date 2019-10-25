@@ -7,15 +7,14 @@ module View
 
   def menu 
     puts '[1] To Create an Account Press 1'
-    puts '[2] To Check your Booked Trips 2'
-    puts '[3] To Cancel a Booking Press 3'
-    puts '[4] To Check Trip by Destination Press 4'
-    puts '[5] To Check Available Trips Press 5'
-    puts 'To Update your account 6'
-    puts '[7] To Delete your Account Press 7'
-    # Check my own trips
-    # Delete my own trips
-    puts "[8] To Quit press any Key"
+    puts '[2] To Book a Trip Press 2'
+    puts '[3] To Check your Booked Trips 3'
+    puts '[4] To Cancel a Booking Press 4'
+    puts '[5] To Check Trip by Destination Press 5'
+    puts '[6] To Check Available Trips Press 6'
+    puts '[7] To Update your account 7'
+    puts '[8] To Delete your Account Press 8'
+    puts '[9] To Quit press any Key'
 
     ch = STDIN.getch
       case ch
@@ -23,24 +22,28 @@ module View
         new_lines
         create_account
       when "2"
-        new_lines
-        my_trips
+        create_booking
       when "3"
         new_lines
-        delete_a_booking
+        my_trips
       when "4"
         new_lines
-        trip_by_destination
+        delete_a_booking
       when "5"
         new_lines
-        first_ten_trips
+        trip_by_destination
       when "6"
         new_lines
-        update_account
+        first_ten_trips
+        new_lines
+        menu
       when "7"
         new_lines
-        delete_account
+        update_account
       when "8"
+        new_lines
+        delete_account
+      when "9"
         'Good bye'
       else
         'Please enter a valid response from the Menu. eg: [1] to create an account'

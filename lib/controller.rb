@@ -4,9 +4,20 @@ module Controller
     puts "Please Enter your email to get all your Booked Trips: "
     email = gets.chomp
     my_trips = User.my_trips(email)
-    puts "||||||||| Kindly Fdnd your Trips bellow |||||||||"
-    render(my_trips)
     new_lines
+    if my_trips == nil
+      puts "||||||||| Please enter your valid email or create an account |||||||||"
+      new_lines
+
+    elsif my_trips.size.zero?
+      puts "||||||||| You currently don't have any booked trips |||||||||"
+      new_lines
+    else
+      puts "||||||||| Kindly Fdnd your Trips bellow |||||||||"
+      render(my_trips)
+      new_lines
+    end
+
     menu
   end
 
@@ -14,8 +25,13 @@ module Controller
     puts 'Thinking of geting away? We can help you with that decision!'
     puts 'Enter the destination you want to go:'
     query = gets.chomp
-    results = find_trip_by_destination(query)
-    render(results)
+    results = Trip.find_trip_by_destination(query)
+    if results == nil
+      puts 'Sorry Destination not available'
+    else
+      render(results)
+    end
+    menu
   end
 
   def create_account
@@ -35,6 +51,30 @@ module Controller
     new_lines
 
     menu
+  end
+
+  def create_booking
+    puts "Ready to get away"
+    puts "Please Enter your Email: "
+    email = gets.chomp
+    user = User.find_user_by_email(email)
+    puts "#{user.first_name}, See available destinations"
+    first_ten_trips
+    new_lines
+    puts "Please enter the ID of the trip to book"
+    get_trip_id = gets.chomp
+    get_trip_id = get_trip_id.to_i
+    trip = Trip.find_by_id(get_trip_id)
+    if trip == nil
+      puts "Invalid ID"
+    else
+      created = Booking.create(user_id: user.id, trip_id: trip.id)
+      puts "Booking created succesully on #{created.created_at}"
+      results = user.trips
+      render(results)
+    end
+    menu
+
   end
 
   def update_account
@@ -70,26 +110,31 @@ module Controller
     results = Trip.first_ten
     render(results)
     new_lines
-
-    menu
   end
 
   def delete_a_booking
     puts "Please Enter your email to get all your Bookings: "
     email = gets.chomp
-    me = User.find_by(email: email)
-    bookings = me.bookings
-    puts "||||||||| Kindly Find your bookings bellow |||||||||"
-    render_bookings(bookings)
+    bookings = User.my_bookings(email)
     new_lines
-    if bookings
-      puts "Please Enter the ID of the booking to delete"
-      booking_id = gets.chomp
-      deleted = bookings.find_by(id: booking_id).delete
-      puts "Booking with ID #{deleted.id} Succesfully Deleted"
+    if bookings == nil
+      puts "You have know bookings at this moment"
       new_lines
     else
-      puts "You have know bookings at this moment"
+
+      puts "||||||||| Kindly Find your bookings bellow |||||||||"
+      render_bookings(bookings)
+      new_lines
+      puts "Please Enter the ID of the booking to delete"
+      booking_id = gets.chomp
+      to_delete = bookings.find_by(id: booking_id)
+      if to_delete == nil
+        puts "The ID does not exist"
+      else
+        deleted = to_delete.delete
+        puts "Booking with ID #{deleted.id} Succesfully Deleted"
+        new_lines
+      end
     end 
     menu    
 
@@ -99,18 +144,30 @@ module Controller
     puts 'You Really Want to Stop Seeing Great Places'
     puts 'Please enter your Email: '
     email = gets.chomp
-  
-    user = User.find_by(email: email)
-    if user
+    
+    user = User.find_user_by_email(email)
+    new_lines
+    if user == nil
+      puts "You don't have an account with us please press 1 to create one"
+      new_lines
+    else
       delete = user.delete
       new_lines
       puts "Sad to see you go #{delete.first_name} #{delete.last_name}. Account Deleted Successful"
       new_lines
-      menu
-    else
-      puts "You don't have an account with us please press 1 to create one"
+     
     end
+    menu
   
+  end
+
+  private 
+  def valid_email?(email)
+    if (email =~ /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i) == nil 
+      false
+    else
+      true
+    end
   end
 
     
