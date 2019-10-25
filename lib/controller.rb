@@ -1,6 +1,7 @@
 module Controller
 
   def my_trips
+    new_lines
     puts "Please Enter your email to get all your Booked Trips: "
     email = gets.chomp
     my_trips = User.my_trips(email)
@@ -13,7 +14,7 @@ module Controller
       puts "||||||||| You currently don't have any booked trips |||||||||"
       new_lines
     else
-      puts "||||||||| Kindly Fdnd your Trips bellow |||||||||"
+      puts "||||||||| Kindly Find your Trips bellow |||||||||"
       render(my_trips)
       new_lines
     end
@@ -22,19 +23,24 @@ module Controller
   end
 
   def trip_by_destination
+    new_lines
     puts 'Thinking of geting away? We can help you with that decision!'
-    puts 'Enter the destination you want to go:'
+    puts 'Enter the destination you want to go: eg Trantowstad, Stanborough '
     query = gets.chomp
     results = Trip.find_trip_by_destination(query)
     if results == nil
       puts 'Sorry Destination not available'
     else
+      puts "||||||||| Trips for this destination |||||||||"
+      new_lines
       render(results)
+      new_lines
     end
     menu
   end
 
   def create_account
+    new_lines
     puts 'First Name: '
     f_name = gets.chomp
 
@@ -54,10 +60,12 @@ module Controller
   end
 
   def create_booking
+    new_lines
     puts "Ready to get away"
     puts "Please Enter your Email: "
     email = gets.chomp
     user = User.find_user_by_email(email)
+    new_lines
     puts "#{user.first_name}, See available destinations"
     first_ten_trips
     new_lines
@@ -68,16 +76,20 @@ module Controller
     if trip == nil
       puts "Invalid ID"
     else
+      new_lines
       created = Booking.create(user_id: user.id, trip_id: trip.id)
+      puts "||||||||| Your Trip Details |||||||||"
       puts "Booking created succesully on #{created.created_at}"
       results = user.trips
       render(results)
+      new_lines
     end
     menu
 
   end
 
   def update_account
+    new_lines
     puts 'Your Email'
     email = gets.chomp
     user = User.find_by(email: email)
@@ -107,12 +119,15 @@ module Controller
   end
 
   def first_ten_trips
+    new_lines
     results = Trip.first_ten
+    puts "||||||||| Ready to escape Available Trips |||||||||"
     render(results)
     new_lines
   end
 
   def delete_a_booking
+    new_lines
     puts "Please Enter your email to get all your Bookings: "
     email = gets.chomp
     bookings = User.my_bookings(email)
@@ -141,6 +156,7 @@ module Controller
   end
 
   def delete_account
+    new_lines
     puts 'You Really Want to Stop Seeing Great Places'
     puts 'Please enter your Email: '
     email = gets.chomp
